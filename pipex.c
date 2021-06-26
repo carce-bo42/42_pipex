@@ -16,6 +16,31 @@ void	error_msg(void)
 	exit(0);
 }
 
+int		find_i_path(char **env)
+{
+	int	i;
+
+	i = 0;
+	while (env[i])
+	{
+		if (ft_strncmp(env[i], "PATH=", 5) == 0)
+			break ;
+		i++;
+	}
+	return (i);
+}
+
+char	*find_exec_path(char **argv, char **env)
+{
+	char	**exec_paths;
+	int		i_path;
+
+	i_path = find_i_path(env);
+
+
+
+
+
 /* Point is, the child process will trick the cmd1 into having 
  * file1 as the STDIN (fd = 0), and write the output (fd = 1) on the
  * write end of the pipe, which the father process will be able to
