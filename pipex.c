@@ -6,9 +6,9 @@ void	arg_error(void)
 	exit(0);
 }
 
-void	commant_not_found_error(char **cmd)
+void	command_not_found_error(char **cmd)
 {
-	ft_putstr_fd("./pipex: Command not found: ", 2);
+	ft_putstr_fd("pipex: Command not found: ", 2);
 	ft_putstr_fd(cmd[0], 2);
 	exit(0);
 }
@@ -20,6 +20,19 @@ void	error_msg(void)
 	str = strerror(errno);
 	write(2, str, ft_strlen(str));
 	write(2, "\n", 1);
+	exit(0);
+}
+
+void	error_msg_explicit(char *file)
+{
+	char	*str;
+
+	str = strerror(errno);
+	ft_putstr_fd("pipex: ", 2);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(file, 2);
+	ft_putstr_fd("\n", 2);
 	exit(0);
 }
 
@@ -57,7 +70,7 @@ char	**put_bars_and_cmd_on_path(char **path, char **cmd)
 	return (path);
 }
 
-char	**get_paths(char **argv, char **cmd, char **env)
+char	**get_paths(char **cmd, char **env)
 {
 	int		i_path;
 	char	*aux;
@@ -80,6 +93,7 @@ void	free_matrix(char **mat)
 		free(mat[i]);
 		i++;
 	}
+	free(mat[i]);
 	free(mat);
 }
 
@@ -89,13 +103,14 @@ void	free_matrix(char **mat)
  * then it adds a / and the exec name to form the correct path (if it
  * exists), and then checks with access(2) wether there is one path
  * that can find the binary, and in that case it returns it.*/
-char	*find_exec_path(char **argv, char **cmd, char **env)
+char	*find_exec_path(char **cmd, char **env)
 {
 	char	**exec_paths;
 	char	*path;
 	int		i;
 
-	exec_paths = get_paths(argv, cmd, env);
+	exec_paths = get_paths(cmd, env);
+	path = NULL;
 	i = 0;
 	while (exec_paths[i])
 	{
@@ -108,7 +123,7 @@ char	*find_exec_path(char **argv, char **cmd, char **env)
 	}
 	free_matrix(exec_paths);
 	if (!path)
-		commant_not_found_error(cmd);
+		command_not_found_error(cmd);
 	return (path);
 }
 
@@ -122,19 +137,37 @@ char	*find_exec_path(char **argv, char **cmd, char **env)
 void	child(int p[2], char **argv, char **env)
 {
 	int		fd;
-	char	**flags;
 	char	*path;
 	char	**cmd;
 
-	close(p[0]);					//We dont need the read end of the pipe in the child process.
-	fd = open(argv[1], O_RDONLY);	// we open the archive given as an arg.
+	close(p[0]);
+	fd = open(argv[1], O_RDONLY);
+	if (fd == -1)
+		error_msg_explicit(argv[1]);
+	dup2(fd, 0);
+	dup2(p[1], 1);
+	close(p[1]);
+	cmd = ft_split(argv[2], ' ');
+	path = find_exec_path(cmd, env);
+	if (execve(path, cmd, env) == -1)
+		error_msg();
+}
+
+void	parent(int p[2], char **argv, char **env)
+{
+	int		fd;
+	char	*path;
+	char	**cmd;
+		
+	close(p[1]);
+	fd = open(argv[4], O_CREAT | O_RDWR | O_TRUNC, 0666);
 	if (fd == -1)
 		error_msg();
-	dup2(fd, 0);		//Now STDIN means fd, so if cm1 needs some input it will interpret whatever fd has.
-	dup2(p[1], 1);		//Whatever execve does, it will be outputed to the write end of the pipe. 
-	close(p[1]);		// We no longer need the fd from p[1], we have it on STDOUT.
-	cmd = ft_split(argv[2], ' ');
-	path = find_exec_path(argv, cmd, env);
+	dup2(p[0], 0);
+	dup2(fd, 1);
+	close(p[0]);
+	cmd = ft_split(argv[3], ' ');
+	path = find_exec_path(cmd, env);
 	if (execve(path, cmd, env) == -1)
 		error_msg();
 }
@@ -155,9 +188,6 @@ int main(int argc, char **argv, char **env)
 	if (pid == 0)
 		child(p, argv, env);
 	else
-	{
-		//Parent process;
-
-	}
+		parent(p, argv, env);
 	return (0);
 }
