@@ -1,12 +1,14 @@
 NAME := pipex
 LIBFT_NAME = libft.a
 
-SRCS = pipex.c 
+SRCS = pipex.c \
+	  ./srcs/path_finder.c \
+	  ./srcs/stderr_outputs.c \
 
 OBJS = ${SRCS:.c=.o}
 
 LIBFT_DIR := ./libft/
-INC_DIR := ./
+INC_DIR := ./includes/
 EXE_DIR = ./
 
 CC := cc
@@ -18,7 +20,7 @@ RM := rm -f
 %.o: %.c
 	$(CC)  $(CFLAGS) -c $< -I $(INC_DIR) -o $@
 
-$(NAME): $(LIBFT_DIR)$(LIBFT_NAME) $(OBJS)
+$(NAME): $(LIBFT_DIR)$(LIBFT_NAME) $(OBJS) 
 	$(CC) -o $(NAME)  $^ -I $(INC_DIR)
 
 $(LIBFT_DIR)$(LIBFT_NAME): $(LIBFT_DIR)

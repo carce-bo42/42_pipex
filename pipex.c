@@ -1,132 +1,5 @@
 #include "pipex.h"
 
-void	arg_error(void)
-{
-	ft_putstr_fd("Usage: ./pipex file1 \"cmd1 flags1\" \"cmd2 flags2\" file2", 2);
-	exit(0);
-}
-
-void	command_not_found_error(char **cmd)
-{
-	ft_putstr_fd("pipex: Command not found: ", 2);
-	ft_putstr_fd(cmd[0], 2);
-	exit(0);
-}
-
-void	error_msg(void)
-{
-	char	*str;
-
-	str = strerror(errno);
-	write(2, str, ft_strlen(str));
-	write(2, "\n", 1);
-	exit(0);
-}
-
-void	error_msg_explicit(char *file)
-{
-	char	*str;
-
-	str = strerror(errno);
-	ft_putstr_fd("pipex: ", 2);
-	ft_putstr_fd(str, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putstr_fd(file, 2);
-	ft_putstr_fd("\n", 2);
-	exit(0);
-}
-
-int		find_i_path(char **env)
-{
-	int	i;
-
-	i = 0;
-	while (env[i])
-	{
-		if (ft_strncmp(env[i], "PATH=", 5) == 0)
-			break ;
-		i++;
-	}
-	return (i);
-}
-
-char	**put_bars_and_cmd_on_path(char **path, char **cmd)
-{
-	int		i;
-	char	*aux_1;
-	char	*aux_2;
-
-	i = 0;
-	while (path[i])
-	{
-		aux_1 = path[i];
-		path[i] = ft_strjoin(path[i], "/");
-		aux_2 = path[i];
-		path[i] = ft_strjoin(path[i], cmd[0]);
-		free(aux_1);
-		free(aux_2);
-		i++;
-	}
-	return (path);
-}
-
-char	**get_paths(char **cmd, char **env)
-{
-	int		i_path;
-	char	*aux;
-	char	**paths_wo_bar;
-
-	i_path = find_i_path(env);
-	aux = ft_strtrim(env[i_path], "PATH=");
-	paths_wo_bar = ft_split(aux, ':');
-	free(aux);
-	return (put_bars_and_cmd_on_path(paths_wo_bar, cmd));
-}
-
-void	free_matrix(char **mat)
-{
-	int	i;
-
-	i = 0;
-	while (mat[i])
-	{
-		free(mat[i]);
-		i++;
-	}
-	free(mat[i]);
-	free(mat);
-}
-
-/*Function that will get the correct path to the binary command
- * specified by cmd (the <0 entries of this matrix are the corresponding
- * flags if specified). It first gets every path in the PATH env variable,
- * then it adds a / and the exec name to form the correct path (if it
- * exists), and then checks with access(2) wether there is one path
- * that can find the binary, and in that case it returns it.*/
-char	*find_exec_path(char **cmd, char **env)
-{
-	char	**exec_paths;
-	char	*path;
-	int		i;
-
-	exec_paths = get_paths(cmd, env);
-	path = NULL;
-	i = 0;
-	while (exec_paths[i])
-	{
-		if (access(exec_paths[i], X_OK | F_OK) == 0)
-		{
-			path = ft_strdup(exec_paths[i]);
-			break ;
-		}
-		i++;
-	}
-	free_matrix(exec_paths);
-	if (!path)
-		command_not_found_error(cmd);
-	return (path);
-}
-
 /* Point is, the child process will trick the cmd1 into having 
  * file1 as the STDIN (fd = 0), and write the output (fd = 1) on the
  * write end of the pipe, which the father process will be able to
@@ -134,7 +7,7 @@ char	*find_exec_path(char **cmd, char **env)
  * STDIN, and the STDOUT on the write end of the pipe. This way 
  * the parent process will read from the read end of the pipe
  * whatever the first cmd outputted. */
-void	child(int p[2], char **argv, char **env)
+static void	child(int p[2], char **argv, char **env)
 {
 	int		fd;
 	char	*path;
@@ -153,7 +26,11 @@ void	child(int p[2], char **argv, char **env)
 		error_msg();
 }
 
-void	parent(int p[2], char **argv, char **env)
+/*In this case, the parent will recieve on the stdin whatever the
+ * child process outputted, and it will ovewrite (O_TRUNC) or create
+ * a new file whose fd will be duplicated with the STDOUT of the
+ * parent process.*/  
+static void	parent(int p[2], char **argv, char **env)
 {
 	int		fd;
 	char	*path;
