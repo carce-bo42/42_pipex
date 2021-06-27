@@ -1,6 +1,6 @@
 #include "pipex.h"
 
-int		find_i_path(char **env)
+int	find_i_path(char **env)
 {
 	int	i;
 

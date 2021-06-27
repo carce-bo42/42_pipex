@@ -29,13 +29,13 @@ static void	child(int p[2], char **argv, char **env)
 /*In this case, the parent will recieve on the stdin whatever the
  * child process outputted, and it will ovewrite (O_TRUNC) or create
  * a new file whose fd will be duplicated with the STDOUT of the
- * parent process.*/  
+ * parent process.*/
 static void	parent(int p[2], char **argv, char **env)
 {
 	int		fd;
 	char	*path;
 	char	**cmd;
-		
+
 	close(p[1]);
 	fd = open(argv[4], O_CREAT | O_RDWR | O_TRUNC, 0666);
 	if (fd == -1)
@@ -50,7 +50,7 @@ static void	parent(int p[2], char **argv, char **env)
 }
 
 /*Program that copies the < file1 cmd1 | cmd2 > file2 bash command.*/
-int main(int argc, char **argv, char **env)
+int	main(int argc, char **argv, char **env)
 {
 	int		p[2];
 	pid_t	pid;
