@@ -8,12 +8,9 @@
 # include <sys/errno.h>
 # include <string.h>
 # include <sys/stat.h>
-# ifndef ANSI_COLOR_GREEN
 #  define ANSI_COLOR_GREEN "\033[0;32m"
-# endif
-# ifndef ANSI_UNSET_GREEN
 #  define ANSI_UNSET_GREEN "\033[0m"
-# endif
+
 int		find_i_path(char **env);
 char	**put_bars_and_cmd_on_path(char **path, char **cmd);
 char	**get_paths(char **cmd, char **env);
@@ -23,6 +20,7 @@ void	error_msg_relative_to_file(char *file);
 void	error_msg(void);
 void	command_not_found_error(char **cmd);
 void	arg_error(void);
+void	wait_and_exit(pid_t pid);
 
 // Libft utils
 
