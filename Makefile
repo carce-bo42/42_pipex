@@ -1,13 +1,14 @@
 NAME := pipex
-LIBFT_NAME = libft.a
 
-SRCS = pipex.c \
+SRCS = ./srcs/pipex.c \
 	  ./srcs/path_finder.c \
 	  ./srcs/stderr_outputs.c \
+	  ./srcs/libft_utils_1.c \
+	  ./srcs/libft_utils_2.c \
+	  ./srcs/libft_utils_3.c
 
 OBJS = ${SRCS:.c=.o}
 
-LIBFT_DIR := ./libft/
 INC_DIR := ./includes/
 EXE_DIR = ./
 
@@ -18,22 +19,17 @@ MV := mv -f
 RM := rm -f
 
 %.o: %.c
-	$(CC)  $(CFLAGS) -c $< -I $(INC_DIR) -o $@
+	$(CC) $(CFLAGS) -c $< -I $(INC_DIR) -o $@ #-fsanitize=address
 
-$(NAME): $(LIBFT_DIR)$(LIBFT_NAME) $(OBJS) 
-	$(CC) -o $(NAME)  $^ -I $(INC_DIR)
-
-$(LIBFT_DIR)$(LIBFT_NAME): $(LIBFT_DIR)
-	make -C $(LIBFT_DIR)
+$(NAME):	$(OBJS) 
+	$(CC) -o $(NAME) $^ -I $(INC_DIR) #-fsanitize=address
 
 all: $(NAME)
 
 clean:
-	make -C $(LIBFT_DIR) clean
 	$(RM) $(OBJS)
 
 fclean: clean
-	make -C $(LIBFT_DIR) fclean
 	$(RM) $(NAME)
 
 re: clean all
