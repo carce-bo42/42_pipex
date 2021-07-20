@@ -1,6 +1,6 @@
 #include "pipex.h"
 
-void	wait_and_exit(pid_t pid)
+static void	wait_and_exit(pid_t pid)
 {
 	waitpid(pid, 0, 0);
 	exit(0);

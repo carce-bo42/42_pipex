@@ -8,8 +8,8 @@
 # include <sys/errno.h>
 # include <string.h>
 # include <sys/stat.h>
-#  define ANSI_COLOR_GREEN "\033[0;32m"
-#  define ANSI_UNSET_GREEN "\033[0m"
+# define ANSI_COLOR_GREEN "\033[0;32m"
+# define ANSI_UNSET_GREEN "\033[0m"
 
 int		find_i_path(char **env);
 char	**put_bars_and_cmd_on_path(char **path, char **cmd);

@@ -1,8 +1,5 @@
 /* Bonus functions */
 
-
-
-
 typedef struct	s_pip
 {
 	int		p[2];
@@ -11,3 +8,7 @@ typedef struct	s_pip
 	char	***env_p;
 	pid_t	child;
 }				t_pip;
+
+void	print_usage_and_exit(void);
+void	pipex_alpha(int argc, char **argv, char **env);
+void	pipex_beta(int argc, char **argv, char **env);
