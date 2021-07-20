@@ -40,8 +40,8 @@ static void	parent(int p[2], char **argv, char **env, pid_t pid_child)
 {
 	int		fd;
 	char	*path;
-	char	**cmd;
 	pid_t	pid;
+	char	**cmd;
 
 	pid = fork();
 	close(p[1]);
@@ -52,7 +52,7 @@ static void	parent(int p[2], char **argv, char **env, pid_t pid_child)
 		if (fd == -1)
 			error_msg_relative_to_file(argv[4]);
 		cmd = ft_split(argv[3], ' ');
-		path = find_exec_path(cmd, env);
+		path = find_exec_path(ft_split(argv[3], ' '), env);
 		dup2(p[0], 0);
 		dup2(fd, 1);
 		close(p[0]);
