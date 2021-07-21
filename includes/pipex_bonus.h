@@ -2,13 +2,16 @@
 
 typedef struct	s_pip
 {
-	int		p[2];
-	int		argv_idx;
-	char	***argv_p;
-	char	***env_p;
-	pid_t	child;
+	int		fd;
+	int		v_i;
+	int		argc;
+	int		fdi;
+	int		fdo;
+	char	**argv;
+	char	**env;
+	pid_t	pid;
 }				t_pip;
 
 void	print_usage_and_exit(void);
-void	pipex_alpha(int argc, char **argv, char **env);
-void	pipex_beta(int argc, char **argv, char **env);
+void	pipex_alpha(t_pip *p);
+void	pipex_beta(t_pip *p);

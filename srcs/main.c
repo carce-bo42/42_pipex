@@ -1,6 +1,6 @@
 #include "pipex.h"
 
-static void	wait_and_exit(pid_t pid)
+void	wait_and_exit(pid_t pid)
 {
 	waitpid(pid, 0, 0);
 	exit(0);
@@ -26,6 +26,7 @@ static void	child(int p[2], char **argv, char **env)
 	dup2(fd, 0);
 	dup2(p[1], 1);
 	close(p[1]);
+	close(fd);
 	cmd = ft_split(argv[2], ' ');
 	path = find_exec_path(cmd, env);
 	if (execve(path, cmd, env) == -1)
@@ -52,10 +53,11 @@ static void	parent(int p[2], char **argv, char **env, pid_t pid_child)
 		if (fd == -1)
 			error_msg_relative_to_file(argv[4]);
 		cmd = ft_split(argv[3], ' ');
-		path = find_exec_path(ft_split(argv[3], ' '), env);
+		path = find_exec_path(cmd, env);
 		dup2(p[0], 0);
 		dup2(fd, 1);
 		close(p[0]);
+		close(fd);
 		if (execve(path, cmd, env) == -1)
 			error_msg();
 	}

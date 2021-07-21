@@ -62,7 +62,7 @@ void	free_matrix(char **mat)
 }
 
 /*Function that will get the correct path to the binary command
- * specified by cmd (the <0 entries of this matrix are the corresponding
+ * specified by cmd (the  > 0 entries of this matrix are the corresponding
  * flags if specified). It first gets every path in the PATH env variable,
  * then it adds a / and the exec name to form the correct path (if it
  * exists), and then checks with access(2) wether there is one path
@@ -73,16 +73,15 @@ char	*find_exec_path(char **cmd, char **env)
 	char	*path;
 	int		i;
 
+	if (access(cmd[0], X_OK | F_OK) == 0)
+		return (ft_strdup(cmd[0]));
 	exec_paths = get_paths(cmd, env);
 	path = NULL;
 	i = 0;
 	while (exec_paths[i])
 	{
-		if (access(exec_paths[i], X_OK | F_OK) == 0)
-		{
+		if (access(exec_paths[i], X_OK | F_OK) == 0 && !path)
 			path = ft_strdup(exec_paths[i]);
-			break ;
-		}
 		i++;
 	}
 	free_matrix(exec_paths);
