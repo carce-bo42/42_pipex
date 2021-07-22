@@ -3,7 +3,7 @@
 /*This function takes the read_line string, splits it in 
  * both line and rest_line, fils lline_out with the line
  * and redefines read_line as the rest.*/
-static char	*ft_write_line(ssize_t len_rd, char *rd_ln, char **ln_out)
+char	*ft_write_line(ssize_t len_rd, char *rd_ln, char **ln_out)
 {
 	char		*rest_ln;
 	ssize_t		len;
@@ -34,7 +34,7 @@ static char	*ft_write_line(ssize_t len_rd, char *rd_ln, char **ln_out)
 
 /*This function reads from the fd until it either ends or reads a
  * \n. Then it passes what's been read to the write_line function.*/
-static char	*ft_read_line(int fd, char *read_line)
+char	*ft_read_line(int fd, char *read_line)
 {
 	char	*buff;
 	ssize_t	read_ret;

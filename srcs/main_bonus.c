@@ -46,7 +46,29 @@ void	pipex_alpha(t_pip *p)
 	}
 }
 
+void	here_doc_input(t_pip *p, int pip[2])
+{
+	char	*line;
 
+	p->fdi = 0;
+	close(pip[0]);
+	line = NULL;
+	write(1, "$> ", 3);
+	get_next_line(0, &line);
+	if (ft_strnstr(line, p->argv[2], ft_strlen(line)))
+	{
+		free(line);
+		close(pip[1]);
+		exit(0);
+	}
+	else
+	{
+		write(pip[1], line, ft_strlen(line));
+		write(pip[1], "\n", 1);
+		free(line);
+		here_doc_input(p, pip);
+	}
+}
 
 void	pipex_beta(t_pip *p)
 {
@@ -55,14 +77,11 @@ void	pipex_beta(t_pip *p)
 	pipe(pip);
 	p->pid = fork();
 	if (p->pid == 0)
-		file_input_piped_output(p, pip);
+		here_doc_input(p, pip);
 	else
 	{
 		p->v_i = 3;
-		if (p->v_i == p->argc - 2)
-			piped_input_file_output(p, p->pid, pip);
-		else
-			piped_input_piped_output(p, p->pid, pip);
+		piped_input_piped_output(p, p->pid, pip);
 	}
 }
 
