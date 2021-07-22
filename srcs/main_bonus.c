@@ -46,6 +46,8 @@ void	pipex_alpha(t_pip *p)
 	}
 }
 
+
+
 void	pipex_beta(t_pip *p)
 {
 	int	pip[2];

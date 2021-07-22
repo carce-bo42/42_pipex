@@ -24,6 +24,10 @@ void	file_input_piped_output(t_pip *p, int pip[2]);
 void	piped_input_file_output(t_pip *p, pid_t pid_child, int pip[2]);
 void	piped_input_piped_output(t_pip *p, pid_t child, int old_pip[2]);
 
+// Libft utils
+
+char	*ft_strnstr(const char *haystack, const char *needle, size_t len);
+
 // Gnl utils
 
 # define BUFFER_SIZE 100
