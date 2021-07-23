@@ -23,10 +23,10 @@ void	dup_stdin_stdout_and_close(int new_in, int new_out);
 void	file_input_piped_output(t_pip *p, int pip[2]);
 void	piped_input_file_output(t_pip *p, pid_t pid_child, int pip[2]);
 void	piped_input_piped_output(t_pip *p, pid_t child, int old_pip[2]);
-
-// Libft utils
-
-char	*ft_strnstr(const char *haystack, const char *needle, size_t len);
+void	hdoc_pipin_pipout(t_pip *p, pid_t pid_child, int old_pip[2]);
+void	pipin_file_append_out(t_pip *p, pid_t pid_child, int pip[2]);
+void	pipin_pipout_append(t_pip *p, pid_t pid_child, int old_pip[2]);
+void	call_execve(t_pip *p);
 
 // Gnl utils
 

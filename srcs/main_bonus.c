@@ -1,5 +1,29 @@
 #include "pipex_bonus.h"
 
+void	call_execve(t_pip *p)
+{
+	char	*path;
+	char	**cmd;
+
+	cmd = ft_split(p->argv[p->v_i], ' ');
+	path = find_exec_path(cmd, p->env);
+	if (execve(path, cmd, p->env) == -1)
+	   error_msg();
+}
+
+size_t	max_len(const char *s1, const char *s2)
+{
+	size_t	len1;
+	size_t	len2;
+
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	if (len1 >= len2)
+		return (len1);
+	else
+		return (len2);
+}
+
 void	wait_and_exit(pid_t pid)
 {
 	waitpid(pid, 0, 0);
@@ -10,7 +34,7 @@ void	print_usage_and_exit(void)
 {
 	ft_putstr_fd("pipex:\nusage: ___> ./pipex file1 \"cmd1 flags1\"  ...", 2);
 	ft_putstr_fd("\"cmdn flags2\" file2\n       \\__> ./pipex here_doc ", 2);
-	ft_putstr_fd("LIMITER \"cmd flags\" \"cmd1 flags\" file\n", 2);
+	ft_putstr_fd("LIMITER \"cmd flags\" \"cmd1 flags1\" file\n", 2);
 	exit(0);
 }
 
@@ -50,12 +74,9 @@ void	here_doc_input(t_pip *p, int pip[2])
 {
 	char	*line;
 
-	p->fdi = 0;
-	close(pip[0]);
-	line = NULL;
 	write(1, "$> ", 3);
 	get_next_line(0, &line);
-	if (ft_strnstr(line, p->argv[2], ft_strlen(line)))
+	if (!ft_strncmp(line, p->argv[2], max_len(line, p->argv[2])))
 	{
 		free(line);
 		close(pip[1]);
@@ -77,11 +98,14 @@ void	pipex_beta(t_pip *p)
 	pipe(pip);
 	p->pid = fork();
 	if (p->pid == 0)
+	{
+		close(pip[0]);
 		here_doc_input(p, pip);
+	}
 	else
 	{
 		p->v_i = 3;
-		piped_input_piped_output(p, p->pid, pip);
+		hdoc_pipin_pipout(p, p->pid, pip);
 	}
 }
 
@@ -93,6 +117,8 @@ int main(int argc, char **argv, char **env)
 	p.v_i = argc - 1;
 	p.argv = argv;
 	p.env = env;
+	p.fdi = dup(0);
+	p.fdo = dup(1);
 	if (argc < 5)
 		print_usage_and_exit();
 	else if (argc >= 5 && ft_strncmp(argv[1], "here_doc", 8))

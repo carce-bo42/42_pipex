@@ -21,9 +21,8 @@ void	piped_input_file_output(t_pip *p, pid_t pid_child, int pip[2])
 	char	**cmd;
 	char	*path;
 
-	pid_child = 1;
-	p->pid = fork();
 	close(pip[1]);
+	p->pid = fork();
 	if (p->pid == 0)
 	{
 		waitpid(pid_child, 0, WNOHANG);
@@ -45,9 +44,8 @@ void	piped_input_piped_output(t_pip *p, pid_t pid_child, int old_pip[2])
 	char	*path;
 
 	pipe(new_pip);
-	p->pid = fork();
 	close(old_pip[1]);
-	pid_child = 0;
+	p->pid = fork();
 	if (p->pid == 0)
 	{
 		waitpid(pid_child, 0, WNOHANG);
