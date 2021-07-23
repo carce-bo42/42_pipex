@@ -1,10 +1,10 @@
 #ifndef PIPEX_BONUS_H
 # define PIPEX_BONUS_H
-#include "pipex.h"
+# include "pipex.h"
 
 /* Bonus functions */
 
-typedef struct	s_pip
+typedef struct s_pip
 {
 	int		fd;
 	int		v_i;
@@ -17,16 +17,16 @@ typedef struct	s_pip
 }				t_pip;
 
 void	print_usage_and_exit(void);
-void	pipex_alpha(t_pip *p);
-void	pipex_beta(t_pip *p);
 void	dup_stdin_stdout_and_close(int new_in, int new_out);
 void	file_input_piped_output(t_pip *p, int pip[2]);
 void	piped_input_file_output(t_pip *p, pid_t pid_child, int pip[2]);
 void	piped_input_piped_output(t_pip *p, pid_t child, int old_pip[2]);
+void	here_doc_input(t_pip *p, int pip[2]);
 void	hdoc_pipin_pipout(t_pip *p, pid_t pid_child, int old_pip[2]);
 void	pipin_file_append_out(t_pip *p, pid_t pid_child, int pip[2]);
 void	pipin_pipout_append(t_pip *p, pid_t pid_child, int old_pip[2]);
 void	call_execve(t_pip *p);
+size_t	max_len(const char *s1, const char *s2);
 
 // Gnl utils
 

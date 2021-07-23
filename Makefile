@@ -17,7 +17,8 @@ SRCS_BONUS = ./srcs/main_bonus.c \
 			 ./srcs/several_pipe_handling_bonus.c \
 			 ./srcs/get_next_line_bonus.c \
 			 ./srcs/get_next_line_utils_bonus.c \
-			 ./srcs/hdoc_related_bonus.c
+			 ./srcs/here_doc_bonus.c \
+			 ./srcs/utils_bonus.c
 
 OBJS = ${SRCS:.c=.o}
 OBJS_BONUS = ${SRCS_BONUS:.c=.o}
