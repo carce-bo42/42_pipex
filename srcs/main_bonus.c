@@ -7,14 +7,16 @@ static void	pipex_alpha(t_pip *p)
 	pipe(pip);
 	p->pid = fork();
 	if (p->pid == 0)
+	{	
 		file_input_piped_output(p, pip);
+	}
 	else
 	{
 		p->v_i = 3;
 		if (p->v_i == p->argc - 2)
-			piped_input_file_output(p, p->pid, pip);
+			piped_input_file_output(p, pip);
 		else
-			piped_input_piped_output(p, p->pid, pip);
+			piped_input_piped_output(p, pip);
 	}
 }
 
@@ -41,7 +43,7 @@ int	main(int argc, char **argv, char **env)
 	t_pip	p;
 
 	p.argc = argc;
-	p.v_i = argc - 1;
+	p.v_i = 2;
 	p.argv = argv;
 	p.env = env;
 	p.fdi = dup(0);
