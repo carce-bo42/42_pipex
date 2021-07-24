@@ -26,6 +26,7 @@ void	hdoc_pipin_pipout(t_pip *p, pid_t pid_child, int old_pip[2]);
 void	pipin_file_append_out(t_pip *p, int pip[2]);
 void	pipin_pipout_append(t_pip *p, int old_pip[2]);
 void	call_execve(t_pip *p);
+void	wait_free_and_exit(pid_t pid, t_pip *p);
 size_t	max_len(const char *s1, const char *s2);
 
 // Gnl utils

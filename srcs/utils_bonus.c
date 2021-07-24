@@ -11,9 +11,10 @@ void	call_execve(t_pip *p)
 		error_msg();
 }
 
-void	wait_and_exit(pid_t pid)
+void	wait_free_and_exit(pid_t pid, t_pip *p)
 {
 	waitpid(pid, 0, 0);
+	free(p);
 	exit(0);
 }
 

@@ -36,24 +36,33 @@ static void	pipex_beta(t_pip *p)
 	}
 }
 
+t_pip	*init_pipe_struct(int argc, char **argv, char **env)
+{
+	t_pip	*p;
+
+	p = malloc(sizeof(t_pip));
+	p->argc = argc;
+	p->v_i = 2;
+	p->argv = argv;
+	p->env = env;
+	p->fdi = dup(0);
+	p->fdo = dup(1);
+	return (p);
+}
+
 int	main(int argc, char **argv, char **env)
 {
-	t_pip	p;
+	t_pip	*p;
 	char	*hdoc;
 
-	p.argc = argc;
-	p.v_i = 2;
-	p.argv = argv;
-	p.env = env;
-	p.fdi = dup(0);
-	p.fdo = dup(1);
+	p = init_pipe_struct(argc, argv, env); 
 	hdoc = "here_doc";
 	if (argc < 5)
 		print_usage_and_exit();
 	else if (argc >= 5 && ft_strncmp(argv[1], hdoc, max_len(argv[1], hdoc)))
-		pipex_alpha(&p);
+		pipex_alpha(p);
 	else if (argc >= 6 && !ft_strncmp(argv[1], hdoc, max_len(argv[1], hdoc)))
-		pipex_beta(&p);
+		pipex_beta(p);
 	else
 		print_usage_and_exit();
 	return (0);

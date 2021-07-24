@@ -30,7 +30,7 @@ void	pipin_file_append_out(t_pip *p, int pip[2])
 		call_execve(p);
 	}
 	else
-		wait_and_exit(p->pid);
+		wait_free_and_exit(p->pid, p);
 }
 
 void	pipin_pipout_append(t_pip *p, int old_pip[2])
