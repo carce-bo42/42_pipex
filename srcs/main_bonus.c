@@ -55,7 +55,7 @@ int	main(int argc, char **argv, char **env)
 	t_pip	*p;
 	char	*hdoc;
 
-	p = init_pipe_struct(argc, argv, env); 
+	p = init_pipe_struct(argc, argv, env);
 	hdoc = "here_doc";
 	if (argc < 5)
 		print_usage_and_exit();
