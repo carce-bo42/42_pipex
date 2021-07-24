@@ -6,10 +6,12 @@ static void	pipex_alpha(t_pip *p)
 
 	pipe(pip);
 	p->pid = fork();
+	printf("p[0] = %i, p[1] = %i\n", pip[0], pip[1]);
 	if (p->pid == 0)
 		file_input_piped_output(p, pip);
 	else
 	{
+		
 		p->v_i = 3;
 		if (p->v_i == p->argc - 2)
 			piped_input_file_output(p, pip);

@@ -14,7 +14,11 @@ void	call_execve(t_pip *p)
 void	wait_free_and_exit(pid_t pid, t_pip *p)
 {
 	waitpid(pid, 0, 0);
+	close(p->fd);
+	close(p->fdi);
+	close(p->fdo);
 	free(p);
+	while(1);
 	exit(0);
 }
 

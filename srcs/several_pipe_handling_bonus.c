@@ -21,7 +21,10 @@ void	piped_input_file_output(t_pip *p, int pip[2])
 		call_execve(p);
 	}
 	else
+	{
+		close(pip[0]);
 		wait_free_and_exit(p->pid, p);
+	}
 }
 
 void	piped_input_piped_output(t_pip *p, int old_pip[2])
@@ -31,13 +34,20 @@ void	piped_input_piped_output(t_pip *p, int old_pip[2])
 	pipe(new_pip);
 	close(old_pip[1]);
 	p->pid = fork();
+	printf("p[0] = %i, p[1] = %i\n", new_pip[0], new_pip[1]);
 	if (p->pid == 0)
 	{
 		dup_stdin_stdout_and_close(old_pip[0], new_pip[1]);
 		call_execve(p);
 	}
 	else if (++(p->v_i) == p->argc - 2)
+	{
+		close(old_pip[0]);
 		piped_input_file_output(p, new_pip);
+	}
 	else
+	{
+		close(old_pip[0]);
 		piped_input_piped_output(p, new_pip);
+	}
 }
