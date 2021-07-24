@@ -37,7 +37,7 @@ static void	child(int p[2], char **argv, char **env)
  * child process outputted, and it will ovewrite (O_TRUNC) or create
  * a new file whose fd will be duplicated with the STDOUT of the
  * parent process.*/
-static void	parent(int p[2], char **argv, char **env, pid_t pid_child)
+static void	parent(int p[2], char **argv, char **env)
 {
 	int		fd;
 	char	*path;
@@ -48,7 +48,6 @@ static void	parent(int p[2], char **argv, char **env, pid_t pid_child)
 	close(p[1]);
 	if (pid == 0)
 	{
-		waitpid(pid_child, 0, 0);
 		fd = open(argv[4], O_CREAT | O_RDWR | O_TRUNC, 0666);
 		if (fd == -1)
 			error_msg_relative_to_file(argv[4]);
@@ -81,6 +80,6 @@ int	main(int argc, char **argv, char **env)
 	if (pid == 0)
 		child(p, argv, env);
 	else
-		parent(p, argv, env, pid);
+		parent(p, argv, env);
 	return (0);
 }
