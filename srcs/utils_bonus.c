@@ -34,9 +34,13 @@ void	dup_stdin_stdout_and_close(int new_in, int new_out)
 
 void	print_usage_and_exit(void)
 {
-	ft_putstr_fd("pipex:\nusage: ___> ./pipex file1 \"cmd1 flags1\"  ...", 2);
-	ft_putstr_fd("\"cmdn flags2\" file2\n       \\__> ./pipex here_doc ", 2);
-	ft_putstr_fd("LIMITER \"cmd flags\" \"cmd1 flags1\" file\n", 2);
+	ft_putstr_fd("pipex:\nusage: _____> ./pipex file_1 \"cmd_1 flags_1\" ... ", 2);
+	ft_putstr_fd("\"cmd_n flags_n\" file_2\n", 2);
+	ft_putstr_fd("      |       Mimics: < file_1 cmd_1 flags_1 | ... ", 2);
+	ft_putstr_fd("| cmd_n flags_n > file_2\n      |\n      |_____> ", 2);
+	ft_putstr_fd("./pipex here_doc LIMITER \"cmd_1 flags_1\" ... \"cmd_n flag", 2);
+	ft_putstr_fd("s_n\" file\n               Mimics: cmd_1 flags_1 << ", 2);
+	ft_putstr_fd("LIMITER | ... | cmd_n flags_n >> file\n", 2);
 	exit(0);
 }
 
