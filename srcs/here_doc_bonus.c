@@ -55,8 +55,8 @@ void	here_doc_input(t_pip *p, int pip[2])
 {
 	char	*line;
 
-	write(1, "$> ", 3);
-	get_next_line(0, &line);
+	write(p->fdo, "$> ", 3);
+	get_next_line(p->fdi, &line);
 	if (!ft_strncmp(line, p->argv[2], max_len(line, p->argv[2])))
 	{
 		free(line);
